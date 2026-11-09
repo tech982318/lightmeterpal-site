@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测光小能手 · 参考级光照与色差比较工具</title>
+<meta name="description" content="用手机测照度、色温、色度、照度均匀度与频闪。所有结果标注精度边界，可靠时给数值，不可靠时说明原因。">
+<style>
+  :root{
+    --navy:#0b1b2e; --navy2:#142e4c; --brand:#1c4e7a;
+    --ink:#0f2233; --muted:#5d6b7a; --line:#e3e8ef;
+    --bg:#ffffff; --soft:#f6f8fb; --warn:#8a5a00; --warnbg:#fff4d6;
+  }
+  *{box-sizing:border-box}
+  html,body{max-width:100%;overflow-x:hidden}
+  img{max-width:100%;height:auto;display:block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* Hero */
+  header.hero{background:linear-gradient(160deg,var(--navy),var(--navy2) 60%,var(--navy));
+              color:#fff;padding:56px 0 48px}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:start}
+  .eyebrow{font-size:12px;letter-spacing:2px;color:#9fc2e6;margin:0 0 10px}
+  h1{font-size:40px;line-height:1.2;margin:0 0 12px;font-weight:700}
+  .lead{color:#cfe0f2;font-size:16px;margin:0 0 22px}
+  .spectrum{height:6px;border-radius:3px;margin:22px 0 8px;
+    background:linear-gradient(90deg,#ffb46b,#ffd9a8,#f6f1e4,#e6eef8,#bfd6f2)}
+  .spectrum-label{font-size:11px;color:#7e9bb8;letter-spacing:1px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .btn{display:inline-block;padding:13px 26px;border-radius:12px;font-weight:600;font-size:15px}
+  .btn-primary{background:#2f7fd0;color:#fff}
+  .btn-primary:hover{background:#3a8ade;text-decoration:none}
+  .btn-ghost{border:1px solid rgba(255,255,255,.35);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);text-decoration:none}
+  .phone{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+         border-radius:20px;padding:10px;max-width:min(360px,100%);margin-left:auto}
+  .phone img{width:100%;border-radius:14px;display:block}
+
+  /* Sections */
+  section{padding:56px 0}
+  section.soft{background:var(--soft)}
+  h2{font-size:26px;margin:0 0 8px}
+  .sub{color:var(--muted);margin:0 0 28px;font-size:15px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff}
+  .card h3{margin:0 0 6px;font-size:16px}
+  .card p{margin:0;color:var(--muted);font-size:14px}
+  .tag{display:inline-block;font-size:12px;color:var(--muted);background:var(--soft);
+       border-radius:6px;padding:2px 8px;margin-top:10px}
+
+  /* Table */
+  table{width:100%;border-collapse:collapse;font-size:14px;background:#fff;table-layout:fixed}
+  td,th{word-break:break-word;overflow-wrap:anywhere}
+  .table-wrap{width:100%;overflow-x:auto}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--soft);font-weight:600}
+  .warnbox{background:var(--warnbg);color:var(--warn);border-radius:12px;
+           padding:14px 16px;font-size:14px;margin-top:18px}
+
+  /* Shots */
+  .shots{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .shots img{width:100%;border:1px solid var(--line);border-radius:12px;display:block}
+
+  /* Download */
+  .dl{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dl .card{padding:22px}
+  .meta{font-size:13px;color:var(--muted);margin-top:10px}
+  code{background:var(--soft);padding:2px 6px;border-radius:6px;font-size:12px;word-break:break-all}
+
+  footer{background:var(--navy);color:#9fb4c9;padding:36px 0;font-size:13px}
+  footer a{color:#cfe0f2}
+  .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media(max-width:860px){
+    .hero-grid{display:block}
+    .phone{margin:20px 0 0;max-width:100%}
+    h1{font-size:30px}
+    .cards{grid-template-columns:1fr 1fr}
+    .shots{grid-template-columns:1fr 1fr}
+    .dl{grid-template-columns:1fr}
+  }
+  @media(max-width:520px){
+    .cards{grid-template-columns:1fr}
+    .wrap{padding:0 14px}
+    h1{font-size:26px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">杭州科远光电有限公司</p>
+      <h1>测光小能手</h1>
+      <p class="lead">
+        用手机自带的环境光传感器和相机，测照度、色温、色度、照度均匀度与频闪。<br>
+        所有结果都标注精度边界：可靠时给数值，不可靠时说明原因。
+      </p>
+      <div class="spectrum"></div>
+      <div class="spectrum-label">2700 K ——— 6500 K</div>
+      <div class="cta">
+        <!-- TODO: 换成真实下载地址（应用市场 / 酷安 / 网盘） -->
+        <a class="btn btn-primary" href="#download">下载 Android 版</a>
+        <a class="btn btn-ghost" href="#features">看看能测什么</a>
+      </div>
+    </div>
+    <div class="phone">
+      <img src="img/dashboard-top.png" alt="测光小能手 读值页：照度、色温、Lab 三块卡片">
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <h2>能测什么</h2>
+    <p class="sub">六项功能，对应现场最常见的六个问题。</p>
+    <div class="cards">
+      <div class="card">
+        <h3>照度 Lux</h3>
+        <p>读取环境光传感器，每秒刷新 3 次。可用照度计校准，支持零点扣除——遮光时真的显示 0。</p>
+        <span class="tag">未校正 / 已校正 状态常驻</span>
+      </div>
+      <div class="card">
+        <h3>色温与色度</h3>
+        <p>读取相机 RAW，经白平衡增益、色彩矩阵换算到 CIE XYZ，再由 McCamy 公式估算色温。</p>
+        <span class="tag">估算值 ±150–300K（已校准）</span>
+      </div>
+      <div class="card">
+        <h3>双光源对比</h3>
+        <p>同一表面分别在两种光源下采样，用 CIEDE2000 给出颜色差异，判断"差得明显不明显"。</p>
+        <span class="tag">判断明显偏移，非精密色差</span>
+      </div>
+      <div class="card">
+        <h3>频闪筛查</h3>
+        <p>短曝光拍摄，对逐行亮度做自相关分析，只给三态结论：检测到 / 未检测到 / 无法判断。</p>
+        <span class="tag">定性筛查，非频闪仪</span>
+      </div>
+      <div class="card">
+        <h3>照度均匀度</h3>
+        <p>2 点、5 点、9 点工作面逐点采样，自动算平均、最小、最大照度与 U1、U2。</p>
+        <span class="tag">参考级比较值</span>
+      </div>
+      <div class="card">
+        <h3>实时照度曲线</h3>
+        <p>自定义时长与采样间隔，自动记录曲线，可导出 Excel 数据表（.xlsx）。</p>
+        <span class="tag">支持开始 / 暂停 / 停止</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="soft">
+  <div class="wrap">
+    <h2>我们明确不做的事</h2>
+    <p class="sub">这一节比功能列表更重要——它决定了哪些数字你可以信。</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th style="width:26%">不做</th><th style="width:42%">原因</th><th style="width:32%">结果</th></tr>
+      <tr>
+        <td>用相机图像估算照度</td>
+        <td>相机图像经过自动曝光与伽马处理，无法反推绝对照度</td>
+        <td>只走环境光传感器</td>
+      </tr>
+      <tr>
+        <td>没有 RAW 也报色温</td>
+        <td>普通图像已被 ISP 白平衡中和，算出来的永远是中性色</td>
+        <td>明确提示"当前设备不支持"</td>
+      </tr>
+      <tr>
+        <td>把条纹换算成频率</td>
+        <td>手机采样率与卷帘快门限制无法支撑可靠换算</td>
+        <td>只给三态结论</td>
+      </tr>
+      <tr>
+        <td>CRI / TLCI / TM-30</td>
+        <td>需要光谱仪，手机不具备</td>
+        <td>不提供</td>
+      </tr>
+      <tr>
+        <td>跨设备 Lab 绝对值一致</td>
+        <td>各机型传感器与色彩矩阵不同</td>
+        <td>标注"同设备相对值"</td>
+      </tr>
+    </table>
+    </div>
+    <div class="warnbox">
+      本应用是<strong>参考级比较工具，不是计量仪器</strong>。需要出具检测报告、验收数据的场合，请使用计量合格的专业仪器。
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>界面</h2>
+    <p class="sub">进入即读数，三块卡片一屏读完。</p>
+    <div class="shots">
+      <img src="img/dashboard-top.png" alt="读值页">
+      <img src="img/deltae.png" alt="双光源对比">
+      <img src="img/uniformity.png" alt="照度均匀度">
+      <img src="img/curve.png" alt="实时照度曲线">
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="download">
+  <div class="wrap">
+    <h2>下载</h2>
+    <p class="sub">Android 8.0 及以上（minSdk 29），安装包约 40 MB，完全离线。</p>
+    <div class="dl">
+      <div class="card">
+        <h3>直接下载 APK</h3>
+        <p>适合先试用、或内网分发。</p>
+        <!-- TODO: 换成真实 APK 地址 -->
+        <p><a class="btn btn-primary" href="download/LightMeterPal-1.6.1-release.apk" style="margin-top:8px">下载 APK</a></p>
+        <p class="meta">SHA256：<code>B399F31A9C544EEAD3D394A59AFC9FFAEE102949CB8DDFBF03E740C031112CDB</code><br>版本：1.6.1 · 39.7 MB</p>
+      </div>
+      <div class="card">
+        <h3>应用市场</h3>
+        <p>上架后这里会给出商店链接，更新更省心。</p>
+        <!-- TODO: 上架后补链接 -->
+        <p class="meta">华为应用市场 · 小米应用商店 · OPPO · vivo · 酷安（陆续上架）</p>
+      </div>
+    </div>
+    <p class="meta">
+      安装提示：首次安装需要在系统里允许"安装未知来源应用"。若手机提示风险，那是因为安装包尚未通过商店校验，
+      可先用应用市场版本。
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <strong style="color:#fff">测光小能手</strong><br>
+      杭州科远光电有限公司<br>
+      <a href="https://www.spectratrue.com">www.spectratrue.com</a> ·
+      <a href="mailto:sales@spectratrue.com">sales@spectratrue.com</a>
+    </div>
+    <div>
+      不收集、不上传任何个人信息<br>
+      无网络权限 · 无账号体系 · 无广告 SDK<br>
+      <a href="privacy.html">隐私政策</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
+
+
+
+
+
