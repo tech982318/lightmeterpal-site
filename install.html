@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安装说明 · 测光小能手</title>
+<style>
+  body{margin:0;background:#fff;color:#0f2233;line-height:1.8;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:42px 20px 80px}
+  h1{font-size:26px;margin:0 0 6px}
+  .meta{color:#5d6b7a;font-size:14px;margin:0 0 30px}
+  h2{font-size:19px;margin:32px 0 8px}
+  li{margin:6px 0}
+  .note{background:#f6f8fb;border-left:3px solid #1c4e7a;padding:12px 16px;border-radius:8px;font-size:14px;margin:16px 0}
+  .warn{background:#fff4d6;color:#8a5a00;padding:12px 16px;border-radius:8px;font-size:14px;margin:16px 0}
+  code{background:#f6f8fb;padding:2px 6px;border-radius:6px;font-size:13px}
+  a{color:#1c4e7a}
+  .step{counter-increment:step;position:relative;padding-left:38px;margin:14px 0}
+  .step::before{content:counter(step);position:absolute;left:0;top:2px;width:26px;height:26px;
+    background:#1c4e7a;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:14px}
+  .steps{counter-reset:step}
+  footer{margin-top:44px;border-top:1px solid #e3e8ef;padding-top:16px;color:#5d6b7a;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>安装说明</h1>
+  <p class="meta">测光小能手 · Android 8.0 及以上 · 安装包约 40 MB</p>
+
+  <h2>第一步：下载</h2>
+  <div class="steps">
+    <div class="step">
+      扫描二维码，或在手机浏览器打开
+      <a href="https://tech982318.github.io/lightmeterpal-site/">tech982318.github.io/lightmeterpal-site</a>。
+    </div>
+    <div class="step">
+      点页面上的「下载 APK」。文件约 40 MB，请用 Wi-Fi 下载。
+    </div>
+    <div class="step">
+      如果是在**微信里**打开链接，先点右上角「···」→「在浏览器打开」。
+      微信内置浏览器不允许下载 APK，会表现为点了没反应。
+    </div>
+  </div>
+
+  <div class="warn">
+    下载后如果系统提示「此类型文件可能有害」，这是因为安装包没有经过应用商店校验，
+    选择「仍要下载 / 继续」即可。我们提供 SHA256 供校验，见下方。
+  </div>
+
+  <h2>第二步：允许安装</h2>
+  <div class="steps">
+    <div class="step">
+      在通知栏或「文件管理 → 下载」里点击 <code>LightMeterPal-1.6.4-release.apk</code>。
+    </div>
+    <div class="step">
+      系统提示「禁止安装未知应用」时，点「设置」，打开你正在用的浏览器（或文件管理器）的
+      「允许安装未知应用」开关。
+    </div>
+    <div class="step">
+      返回后继续安装。部分手机（华为、小米、OPPO）会做病毒扫描，等待几秒即可；若有「无视风险继续安装」，点它。
+    </div>
+    <div class="step">
+      安装完成后，桌面出现「测光小能手」。首次进入会显示启动页，点「开始使用」。
+    </div>
+  </div>
+
+  <h2>第三步：授权相机（可选）</h2>
+  <p>
+    首次进入需要相机的功能（色温、双光源对比、频闪筛查）时，系统会询问相机权限。
+    允许后才能使用这些功能；不允许也不影响照度、照度均匀度、曲线与传感器工具。
+  </p>
+  <div class="note">
+    相机图像只在本机内存中参与计算，不保存、不上传。应用没有网络权限，无法联网。
+  </div>
+
+  <h2>如何确认文件完整</h2>
+  <p>安装包 SHA256：</p>
+  <p><code style="word-break:break-all">F51F0CF4F7C3FF9F977E315A15C7FD189B1D8FA21AA49E606415A3F25EC4289D</code></p>
+  <p>手机端可用「Hash 校验」类小工具核对，一致即说明文件未被篡改。</p>
+
+  <h2>常见问题</h2>
+  <p><strong>Q：华为手机提示「该应用未经华为安全检测」？</strong><br>
+     A：正常现象，因为是从网页安装而非华为应用市场。点「继续安装」即可。</p>
+  <p><strong>Q：安装时提示「解析包错误」？</strong><br>
+     A：多数是下载不完整。删掉文件重新下载；若用微信下载，请改用浏览器。</p>
+  <p><strong>Q：为什么 iPhone 装不了？</strong><br>
+     A：iOS 系统不向第三方应用开放环境光传感器，照度功能无法实现，因此目前只有 Android 版。</p>
+
+  <footer>
+    杭州科远光电有限公司 · <a href="https://www.spectratrue.com">www.spectratrue.com</a> ·
+    <a href="index.html">返回首页</a> · <a href="privacy.html">隐私政策</a>
+  </footer>
+</div>
+</body>
+</html>
